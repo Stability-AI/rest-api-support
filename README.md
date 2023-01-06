@@ -6,7 +6,7 @@
 
 ---
 
-### Related Links
+### Other Links
 
 #### Stability.ai gRPC API
 
