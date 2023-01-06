@@ -4,9 +4,11 @@
 
 - [API Documentation](https://api.stability.ai)
 
-## Related Links
+---
 
-### Stability.ai gRPC API
+### Related Links
 
-- [gRPC API Definitions](https://github.com/Stability-AI/api-interfaces)
-- [gRPC Python SDK](https://github.com/Stability-AI/stability-sdk)
+#### Stability.ai gRPC API
+
+- [API Definitions](https://github.com/Stability-AI/api-interfaces)
+- [Python SDK](https://github.com/Stability-AI/stability-sdk)
