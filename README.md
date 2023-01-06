@@ -1,10 +1,10 @@
 # Stability.ai REST API
 
+The purpose of this repo is to capture discussions, issues, and examples, regarding the Stability.ai REST API.
+
 ### Status: V1 Alpha / Developer Preview
 
 - [API Documentation](https://api.stability.ai)
-
----
 
 ### Other Links
 
