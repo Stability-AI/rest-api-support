@@ -1,2 +1,5 @@
-# rest-api
-Stability REST API examples, issues, and discussions | https://api.stability.ai
+# Stability.ai REST API
+
+Status: V1 Developer Preview
+
+- [API Documentation](https://api.stability.ai)
