@@ -4,15 +4,9 @@ The purpose of this repo is to capture discussions, issues, and examples, regard
 
 ---
 
-### Status: V1 Alpha / Developer Preview
+### Status: V1 Beta / Developer Preview
 
 - [API Documentation](https://api.stability.ai)
-
-Please note, this is an alpha version of our new REST API, and is subject to change according to your feedback.
-
-Feedback during this test is crucial for us to understand what the pain points are and how we can improve it going forward.
-
-Changes will be communicated here, as well as on our online REST API documentation, which can be found at: https://api.stability.ai/docs
 
 Your DreamStudio API key will be required for authentication. You can learn more about API keys here: https://platform.stability.ai/docs/getting-started/authentication
 
