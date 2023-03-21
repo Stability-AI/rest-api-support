@@ -4,7 +4,7 @@ The purpose of this repo is to capture discussions, issues, and examples, regard
 
 ---
 
-### Status: V1 Beta / Developer Preview
+### Status: V1 (stable)
 
 - [API Documentation](https://api.stability.ai)
 
