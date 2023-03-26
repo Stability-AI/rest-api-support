@@ -27,12 +27,12 @@ jobs:
         with:
           node-version: 16
           cache: 'yarn'
-      - name: Install NPM Dependencies
+      - name: yarn install
         run: |
           yarn install --frozen-lockfile
 
       # Rebuild generated files and commit changes (if any)
-      - name: Generate
+      - name: yarn generate
         run: |
           yarn generate
       - name: Commit changes (if any)
@@ -44,7 +44,7 @@ jobs:
           committer_email: actions@github.com
 
       # Lint everything
-      - name: Lint
+      - name: yarn lint
         run: |
           yarn lint
 
