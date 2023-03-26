@@ -16,8 +16,6 @@ info:
     If you have feedback or encounter any issues with the API, please reach out:
       - [https://github.com/Stability-AI/REST-API](https://github.com/Stability-AI/REST-API)
       - [https://discord.gg/stablediffusion #API channel](https://discord.com/channels/1002292111942635562/1042896447311454361)
-
-    Test update.
   title: Stability.ai REST API
   version: 'v1'
   x-logo:
