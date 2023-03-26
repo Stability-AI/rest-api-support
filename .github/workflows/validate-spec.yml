@@ -46,7 +46,7 @@ jobs:
         run: |
           yarn lint
   generated:
-    name: Ensure generated files are up to date
+    name: Update generated files
     runs-on: ubuntu-latest
     steps:
       # Checkout the PR branch so we're able to commit back to it
