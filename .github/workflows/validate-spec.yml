@@ -48,20 +48,19 @@ jobs:
         run: |
           yarn lint
 
-      # Checking for breaking changes (disabled until we merge to main)
-      #
-      # - name: Checkout base branch for breaking change detection
-      #   uses: actions/checkout@v2
-      #   with:
-      #     path: _base
-      #     ref: main
-      # - name: Check v1beta for breaking changes
-      #   uses: mvegter/openapi-diff-action@v0.23.5
-      #   with:
-      #     head-spec: generated/spec/v1beta.json
-      #     base-spec: _base/generated/spec/v1beta.json
-      # - name: Check v1 for breaking changes
-      #   uses: mvegter/openapi-diff-action@v0.23.5
-      #   with:
-      #     head-spec: generated/spec/v1.json
-      #     base-spec: _base/generated/spec/v1.json
+      # Checking for breaking changes
+      - name: Checkout base branch
+        uses: actions/checkout@v2
+        with:
+          path: _base
+          ref: main
+      - name: Check v1beta for breaking changes
+        uses: mvegter/openapi-diff-action@v0.23.5
+        with:
+          head-spec: generated/spec/v1beta.json
+          base-spec: _base/generated/spec/v1beta.json
+      - name: Check v1 for breaking changes
+        uses: mvegter/openapi-diff-action@v0.23.5
+        with:
+          head-spec: generated/spec/v1.json
+          base-spec: _base/generated/spec/v1.json
