@@ -45,3 +45,21 @@ jobs:
       - name: Lint
         run: |
           yarn lint
+  bundle-spec:
+    name: Bundle
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: 'yarn'
+      - name: Install NPM Dependencies
+        run: |
+          yarn install --frozen-lockfile
+      - name: Bundle
+        run: |
+          yarn bundle
+      - name: Assert no changes
+        run: |
+          git diff --exit-code || (echo "Generated spec is out of date. Please run 'yarn bundle' and commit the changes." && exit 1)
