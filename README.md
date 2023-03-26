@@ -12,7 +12,7 @@ Your DreamStudio API key will be required for authentication. You can learn more
 
 If you encounter bugs or have a suggestion for the API, please create an issue [here](https://github.com/Stability-AI/REST-API/issues/new/choose) for us to track.
 
-We also have a support discord channel: #API in https://discord.gg/stablediffusion
+We also have a support discord channel: [#official-rest-api](https://discord.com/channels/1002292111942635562/1042896447311454361) in https://discord.gg/stablediffusion
 
 ---
 
