@@ -1,0 +1,22 @@
+{
+  "name": "stability.ai-rest-api",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "docs:merged": "yarn bundle && redocly preview-docs -p 3000 ./generated/spec/merged.json",
+    "docs:v1alpha": "redocly preview-docs -p 3000 main@v1alpha",
+    "docs:v1beta": "redocly preview-docs -p 3000 main@v1beta",
+    "docs:v1": "redocly preview-docs -p 3000 main@v1",
+    "docs": "yarn docs:v1",
+    "bundle": "redocly bundle --ext json -o ./generated/spec && openapi-merge-cli",
+    "lint:merged": "yarn bundle && redocly lint ./generated/spec/merged.json",
+    "lint:v1alpha": "redocly lint main@v1alpha",
+    "lint:v1beta": "redocly lint main@v1beta",
+    "lint:v1": "redocly lint main@v1",
+    "lint": "yarn lint:v1alpha && yarn lint:v1beta && yarn lint:v1 && yarn lint:merged"
+  },
+  "devDependencies": {
+    "openapi-merge-cli": "^1.3.1",
+    "@redocly/cli": "^1.0.0-beta.122"
+  }
+}

@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "python-examples"
+version = "0.1.0"
+description = "Examples of hitting the Stability REST API using Python"
+authors = ["Todd Elvers <todd@stability.ai>", "John Sabath <john@stability.ai>"]
+license = "UNLICENSED"
+packages = [{include = "code"}]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+requests = "^2.28.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

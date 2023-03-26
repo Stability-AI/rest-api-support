@@ -1,0 +1,1022 @@
+openapi: 3.0.3
+info:
+  title: Stability.ai REST API
+  version: 'v1alpha'
+servers:
+  - url: https://api.stability.ai/v1alpha
+paths:
+  /engines/list:
+    get:
+      description: List all engines available to your organization/user
+      operationId: listEngines
+      summary: list
+      tags:
+        - v1alpha/engines
+      parameters:
+        - $ref: '#/components/parameters/organization'
+        - $ref: '#/components/parameters/apiKey'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListEnginesResponseBody'
+          description: OK response.
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: 'Unauthorized: The provided API key is not valid'
+      security:
+        - STABILITY_API_KEY: []
+      x-codeSamples:
+        - lang: Python
+          source:
+            $ref: '../examples/python/code/v1alpha/list_engines.py'
+        - label: TypeScript
+          lang: Javascript
+          source:
+            $ref: '../examples/ts/code/v1alpha/list_engines.ts'
+        - lang: Go
+          source:
+            $ref: '../examples/go/code/v1alpha/list_engines.go'
+        - lang: cURL
+          source:
+            $ref: '../examples/curl/code/v1alpha/list_engines.sh'
+  /generation/{engine_id}/image-to-image:
+    post:
+      description: Generate big fancy pictures from small fancy pictures - deprecated, use v1beta/image-to-image instead
+      operationId: imageToImage
+      summary: image-to-image
+      tags:
+        - v1alpha/generation
+      parameters:
+        - $ref: '#/components/parameters/engineID'
+        - $ref: '#/components/parameters/accept'
+        - $ref: '#/components/parameters/organization'
+        - $ref: '#/components/parameters/apiKey'
+      requestBody:
+        content:
+          multipart/form-data:
+            example:
+              init_image: <image binary>
+              options:
+                cfg_scale: 7
+                clip_guidance_preset: FAST_BLUE
+                height: 512
+                width: 512
+                sampler: K_DPM_2_ANCESTRAL
+                samples: 1
+                seed: 0
+                step_schedule_end: 0.01
+                step_schedule_start: 0.4
+                steps: 75
+                text_prompts:
+                  - text: A lighthouse on a cliff
+                    weight: 1
+            schema:
+              $ref: '#/components/schemas/ImageToImageRequestBody'
+        required: true
+      responses:
+        '200':
+          description: OK response.
+          headers:
+            Content-Length:
+              $ref: '#/components/headers/Content-Length'
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+            Finish-Reason:
+              $ref: '#/components/headers/Finish-Reason'
+            Seed:
+              $ref: '#/components/headers/Seed'
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: "bad_request: \n- invalid_samples: Sample count may only be greater than 1 when the accept header is set to `application/json`\n- invalid_height_or_width: Height and width must be specified in increments of 64\n- invalid_file_size: The file size of one or more of the provided files is invalid\n- invalid_mime_type: The mime type of one or more of the provided files is invalid\n- invalid_prompts: One or more of the prompts contains filtered words\n- invalid_pixel_count: Incorrect number of pixels specified. Requirements:\n\t- For 768 engines : <span style='display: inline-flex; justify-content: flex-start; gap:8px'>589,824 <span>≤</span> `height * width` <span>≤</span> 1,048,576</span>\n\t- All other engines: <span style='display: inline-flex; justify-content: flex-start; gap:8px'>262,144 <span>≤</span> `height * width` <span>≤</span> 1,048,576</span>\n"
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: 'unauthorized: API key missing or invalid'
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: 'permission_denied: You lack the necessary permissions to perform this action'
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: 'not_found: The requested resource was not found (e.g. specifing a model that does not exist)'
+      security:
+        - STABILITY_API_KEY: []
+      x-codeSamples:
+        - lang: Python
+          source:
+            $ref: '../examples/python/code/v1alpha/image_to_image.py'
+        - label: TypeScript
+          lang: Javascript
+          source:
+            $ref: '../examples/ts/code/v1alpha/image_to_image.ts'
+        - lang: Go
+          source:
+            $ref: '../examples/go/code/v1alpha/image_to_image.go'
+        - lang: cURL
+          source:
+            $ref: '../examples/curl/code/v1alpha/image_to_image.sh'
+  /generation/{engine_id}/image-to-image/masking:
+    post:
+      description: Paint fancy things into fancy pictures - deprecated, use v1beta/image-to-image/masking instead
+      operationId: masking
+      summary: image-to-image/masking
+      tags:
+        - v1alpha/generation
+      parameters:
+        - $ref: '#/components/parameters/engineID'
+        - $ref: '#/components/parameters/accept'
+        - $ref: '#/components/parameters/organization'
+        - $ref: '#/components/parameters/apiKey'
+      requestBody:
+        content:
+          multipart/form-data:
+            example:
+              init_image: <image binary>
+              mask_image: <image binary>
+              options:
+                cfg_scale: 7
+                clip_guidance_preset: FAST_BLUE
+                height: 512
+                width: 512
+                mask_source: MASK_IMAGE_BLACK
+                sampler: K_DPM_2_ANCESTRAL
+                samples: 1
+                seed: 0
+                steps: 75
+                text_prompts:
+                  - text: A lighthouse on a cliff
+                    weight: 1
+            schema:
+              $ref: '#/components/schemas/MaskingRequestBody'
+        required: true
+      responses:
+        '200':
+          description: OK response.
+          headers:
+            Content-Length:
+              $ref: '#/components/headers/Content-Length'
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+            Finish-Reason:
+              $ref: '#/components/headers/Finish-Reason'
+            Seed:
+              $ref: '#/components/headers/Seed'
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: "bad_request: \n- invalid_samples: Sample count may only be greater than 1 when the accept header is set to `application/json`\n- invalid_height_or_width: Height and width must be specified in increments of 64\n- invalid_file_size: The file size of one or more of the provided files is invalid\n- invalid_mime_type: The mime type of one or more of the provided files is invalid\n- invalid_image_dimensions: The dimensions of the provided `init_image` and `mask_image` do not match\n- invalid_mask_image: The parameter `mask_source` was set to `MASK_IMAGE_WHITE` or `MASK_IMAGE_BLACK` but no `mask_image` was provided\n- invalid_prompts: One or more of the prompts contains filtered words\n- invalid_pixel_count: Incorrect number of pixels specified. Requirements:\n\t- For 768 engines : <span style='display: inline-flex; justify-content: flex-start; gap:8px'>589,824 <span>≤</span> `height * width` <span>≤</span> 1,048,576</span>\n\t- All other engines: <span style='display: inline-flex; justify-content: flex-start; gap:8px'>262,144 <span>≤</span> `height * width` <span>≤</span> 1,048,576</span>\n"
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: 'unauthorized: API key missing or invalid'
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: 'permission_denied: You lack the necessary permissions to perform this action'
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: 'not_found: The requested resource was not found (e.g. specifing a model that does not exist)'
+      security:
+        - STABILITY_API_KEY: []
+      x-codeSamples:
+        - lang: Python
+          source:
+            $ref: '../examples/python/code/v1alpha/masking.py'
+        - label: TypeScript
+          lang: Javascript
+          source:
+            $ref: '../examples/ts/code/v1alpha/masking.ts'
+        - lang: Go
+          source:
+            $ref: '../examples/go/code/v1alpha/masking.go'
+        - lang: cURL
+          source:
+            $ref: '../examples/curl/code/v1alpha/masking.sh'
+  /generation/{engine_id}/text-to-image:
+    post:
+      description: Generate an image from text - deprecated, use v1beta/text-to-image instead
+      operationId: textToImage
+      summary: text-to-image
+      tags:
+        - v1alpha/generation
+      parameters:
+        - $ref: '#/components/parameters/engineID'
+        - $ref: '#/components/parameters/accept'
+        - $ref: '#/components/parameters/organization'
+        - $ref: '#/components/parameters/apiKey'
+      requestBody:
+        content:
+          application/json:
+            example:
+              cfg_scale: 7
+              clip_guidance_preset: FAST_BLUE
+              height: 512
+              width: 512
+              sampler: K_DPM_2_ANCESTRAL
+              samples: 1
+              seed: 0
+              steps: 75
+              text_prompts:
+                - text: A lighthouse on a cliff
+                  weight: 1
+            schema:
+              $ref: '#/components/schemas/TextToImageRequestBody'
+        required: true
+      responses:
+        '200':
+          description: OK response.
+          headers:
+            Content-Length:
+              $ref: '#/components/headers/Content-Length'
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+            Finish-Reason:
+              $ref: '#/components/headers/Finish-Reason'
+            Seed:
+              $ref: '#/components/headers/Seed'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Image'
+            image/png:
+              schema:
+                format: binary
+                type: string
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: "bad_request: \n- invalid_samples: Sample count may only be greater than 1 when the accept header is set to `application/json`\n- invalid_height_or_width: Height and width must be specified in increments of 64\n- invalid_prompts: One or more of the prompts contains filtered words\n- invalid_pixel_count: Incorrect number of pixels specified. Requirements:\n\t- For 768 engines : <span style='display: inline-flex; justify-content: flex-start; gap:8px'>589,824 <span>≤</span> `height * width` <span>≤</span> 1,048,576</span>\n\t- All other engines: <span style='display: inline-flex; justify-content: flex-start; gap:8px'>262,144 <span>≤</span> `height * width` <span>≤</span> 1,048,576</span>\n"
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: 'unauthorized: API key missing or invalid'
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: 'permission_denied: You lack the necessary permissions to perform this action'
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: 'not_found: The requested resource was not found (e.g. specifing a model that does not exist)'
+      security:
+        - STABILITY_API_KEY: []
+      x-codeSamples:
+        - lang: Python
+          source:
+            $ref: '../examples/python/code/v1alpha/text_to_image.py'
+        - label: TypeScript
+          lang: Javascript
+          source:
+            $ref: '../examples/ts/code/v1alpha/text_to_image.ts'
+        - lang: Go
+          source:
+            $ref: '../examples/go/code/v1alpha/text_to_image.go'
+        - lang: cURL
+          source:
+            $ref: '../examples/curl/code/v1alpha/text_to_image.sh'
+  /user/account:
+    get:
+      description: Get information about the account associated with the provided API key
+      operationId: userAccount
+      summary: account
+      tags:
+        - v1alpha/user
+      parameters:
+        - $ref: '#/components/parameters/apiKey'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountResponseBody'
+          description: OK response.
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: 'Unauthorized: The provided API key is not valid'
+      security:
+        - STABILITY_API_KEY: []
+      x-codeSamples:
+        - lang: Python
+          source:
+            $ref: '../examples/python/code/v1alpha/get_account.py'
+        - label: TypeScript
+          lang: Javascript
+          source:
+            $ref: '../examples/ts/code/v1alpha/get_account.ts'
+        - lang: Go
+          source:
+            $ref: '../examples/go/code/v1alpha/get_account.go'
+        - lang: cURL
+          source:
+            $ref: '../examples/curl/code/v1alpha/get_account.sh'
+  /user/balance:
+    get:
+      description: Get the credit balance of the account/organization associated with the API key
+      operationId: userBalance
+      summary: balance
+      tags:
+        - v1alpha/user
+      parameters:
+        - $ref: '#/components/parameters/apiKey'
+        - $ref: '#/components/parameters/organization'
+      responses:
+        '200':
+          content:
+            application/json:
+              example:
+                credits: 0.6336833840314097
+              schema:
+                $ref: '#/components/schemas/BalanceResponseBody'
+          description: OK response.
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: 'Unauthorized: The provided API key is not valid'
+      security:
+        - STABILITY_API_KEY: []
+      x-codeSamples:
+        - lang: Python
+          source:
+            $ref: '../examples/python/code/v1alpha/get_balance.py'
+        - label: TypeScript
+          lang: Javascript
+          source:
+            $ref: '../examples/ts/code/v1alpha/get_balance.ts'
+        - lang: Go
+          source:
+            $ref: '../examples/go/code/v1alpha/get_balance.go'
+        - lang: cURL
+          source:
+            $ref: '../examples/curl/code/v1alpha/get_balance.sh'
+components:
+  securitySchemes:
+    STABILITY_API_KEY:
+      type: apiKey
+      name: Authorization
+      in: header
+  parameters:
+    engineID:
+      example: stable-diffusion-512-v2-0
+      in: path
+      name: engine_id
+      required: true
+      schema:
+        example: stable-diffusion-512-v2-0
+        type: string
+    organization:
+      allowEmptyValue: false
+      description: "Allows for requests to be scoped to an organization other than the user's default.  If not provided, the user's default organization will be used."
+      example: org-123456
+      in: header
+      name: Organization
+      x-go-name: OrganizationID
+      schema:
+        type: string
+    apiKey:
+      allowEmptyValue: false
+      required: true
+      example: sk-KT........
+      in: header
+      name: Authorization
+      x-go-name: APIKey
+      schema:
+        type: string
+    accept:
+      allowEmptyValue: true
+      in: header
+      name: Accept
+      schema:
+        default: application/json
+        enum:
+          - application/json
+          - image/png
+        example: application/json
+        type: string
+  headers:
+    Content-Length:
+      required: true
+      schema:
+        type: integer
+    Content-Type:
+      required: true
+      schema:
+        enum:
+          - image/png
+          - application/json
+        type: string
+    Finish-Reason:
+      schema:
+        description: |-
+          The result of the generation process.
+          - `SUCCESS` indicates success
+          - `ERROR` indicates an error
+          - `CONTENT_FILTERED` indicates the result affected by the content filter and may be blurred.
+        enum:
+          - SUCCESS
+          - ERROR
+          - CONTENT_FILTERED
+        type: string
+    Seed:
+      example: 3817857576
+      schema:
+        example: 787078103
+        type: integer
+  schemas:
+    Engine:
+      type: object
+      properties:
+        description:
+          type: string
+        id:
+          type: string
+          x-go-name: ID
+          description: Unique identifier for the engine
+          example: stable-diffusion-v1-5
+        name:
+          type: string
+          description: Name of the engine
+          example: Stable Diffusion v1.5
+        type:
+          type: string
+          description: The type of content this engine produces
+          example: PICTURE
+          enum:
+            - AUDIO
+            - CLASSIFICATION
+            - PICTURE
+            - STORAGE
+            - TEXT
+            - VIDEO
+      required:
+        - id
+        - name
+        - description
+        - type
+    ListEnginesResponseBody:
+      type: object
+      properties:
+        engines:
+          type: array
+          items:
+            $ref: '#/components/schemas/Engine'
+          description: The engines available to your user/organization
+          example:
+            - description: Stability-AI Stable Diffusion v1.5
+              id: stable-diffusion-v1-5
+              name: Stable Diffusion v1.5
+              type: PICTURE
+            - description: Stability-AI Stable Diffusion v2.1
+              id: stable-diffusion-512-v2-1
+              name: Stable Diffusion v2.1
+              type: PICTURE
+            - description: Stability-AI Stable Diffusion 768 v2.1
+              id: stable-diffusion-768-v2-1
+              name: Stable Diffusion v2.1-768
+              type: PICTURE
+      example:
+        engines:
+          - description: Stability-AI Stable Diffusion v1.5
+            id: stable-diffusion-v1-5
+            name: Stable Diffusion v1.5
+            type: PICTURE
+          - description: Stability-AI Stable Diffusion v2.1
+            id: stable-diffusion-512-v2-1
+            name: Stable Diffusion v2.1
+            type: PICTURE
+          - description: Stability-AI Stable Diffusion 768 v2.1
+            id: stable-diffusion-768-v2-1
+            name: Stable Diffusion v2.1-768
+            type: PICTURE
+      required:
+        - engines
+    Error:
+      type: object
+      x-go-name: RESTError
+      properties:
+        id:
+          type: string
+          description: ID is a unique identifier for this particular occurrence of the problem.
+          example: 123abc
+          x-go-name: ID
+        name:
+          type: string
+          description: Name is the name of this class of errors.
+          example: bad_request
+        message:
+          type: string
+          description: Message is a human-readable explanation specific to this occurrence of the problem.
+          example: parameter 'p' must be an integer
+        fault:
+          type: boolean
+          description: Is the error a server-side fault?
+          example: true
+        temporary:
+          type: boolean
+          description: Is the error temporary?
+          example: true
+        timeout:
+          type: boolean
+          description: Is the error a timeout?
+          example: false
+      example:
+        id: jqe9aYAI
+        message: Value of ID must be an integer
+        name: bad_request
+        temporary: false
+        timeout: false
+        fault: true
+      required:
+        - id
+        - name
+        - message
+        - temporary
+        - timeout
+        - fault
+        - status
+    CfgScale:
+      type: number
+      description: How strictly the diffusion process adheres to the prompt text (higher values keep your image closer to your prompt)
+      default: 7
+      example: 7
+      minimum: 0
+      maximum: 35
+    ClipGuidancePreset:
+      type: string
+      default: NONE
+      example: FAST_BLUE
+      enum:
+        - FAST_BLUE
+        - FAST_GREEN
+        - NONE
+        - SIMPLE
+        - SLOW
+        - SLOWER
+        - SLOWEST
+    Height:
+      x-go-type: uint64
+      type: integer
+      description: |-
+        Width of the image in pixels.  Must be in increments of 64 and pass the following validation:
+        - For 768 engines: <span style='display: flex; justify-content: flex-start; gap:8px'>589,824 <span>≤</span> `height * width` <span>≤</span> 1,048,576</span>
+        - All other engines: <span style='display: flex; justify-content: flex-start; gap:8px'>262,144 <span>≤</span> `height * width` <span>≤</span> 1,048,576</span>
+      default: 512
+      example: 512
+      minimum: 128
+    Width:
+      x-go-type: uint64
+      type: integer
+      description: |-
+        Height of the image in pixels.  Must be in increments of 64 and pass the following validation:
+        - For 768 engines: <span style='display: flex; justify-content: flex-start; gap:8px'>589,824 <span>≤</span> `height * width` <span>≤</span> 1,048,576</span>
+        - All other engines: <span style='display: flex; justify-content: flex-start; gap:8px'>262,144 <span>≤</span> `height * width` <span>≤</span> 1,048,576</span>
+      default: 512
+      example: 512
+      minimum: 128
+    Sampler:
+      type: string
+      description: Which sampler to use for the diffusion process. If this value is omitted we'll automatically select an appropriate sampler for you.
+      example: K_DPM_2_ANCESTRAL
+      enum:
+        - DDIM
+        - DDPM
+        - K_DPMPP_2M
+        - K_DPMPP_2S_ANCESTRAL
+        - K_DPM_2
+        - K_DPM_2_ANCESTRAL
+        - K_EULER
+        - K_EULER_ANCESTRAL
+        - K_HEUN
+        - K_LMS
+    Samples:
+      # TODO: Try to use int here?
+      x-go-type: uint64
+      type: integer
+      description: Number of images to generate
+      default: 1
+      example: 1
+      minimum: 1
+      maximum: 10
+    Seed:
+      type: integer
+      x-go-type: uint32
+      description: Random noise seed (omit this option or use `0` for a random seed)
+      default: 0
+      example: 0
+      minimum: 0
+      maximum: 2147483647
+    Steps:
+      # TODO: Try to use int here?
+      x-go-type: uint64
+      type: integer
+      description: Number of diffusion steps to run
+      default: 50
+      example: 75
+      minimum: 10
+      maximum: 150
+    TextPrompt:
+      type: object
+      properties:
+        text:
+          type: string
+          example: 6el
+          maxLength: 2000
+        weight:
+          type: number
+          description: Weight of the prompt (use negative numbers for negative prompts)
+          example: 0.8167237
+          format: float
+      description: Text prompt for image generation
+      example:
+        text: nf9
+        weight: 0.40370443
+      required:
+        - text
+    TextPrompts:
+      type: array
+      items:
+        $ref: '#/components/schemas/TextPrompt'
+      example:
+        - text: A lighthouse on a cliff
+          weight: 1
+      minItems: 1
+    ImageToImageOptions:
+      type: object
+      properties:
+        cfg_scale:
+          $ref: '#/components/schemas/CfgScale'
+        clip_guidance_preset:
+          $ref: '#/components/schemas/ClipGuidancePreset'
+        height:
+          $ref: '#/components/schemas/Height'
+        width:
+          $ref: '#/components/schemas/Width'
+        sampler:
+          $ref: '#/components/schemas/Sampler'
+        samples:
+          $ref: '#/components/schemas/Samples'
+        seed:
+          $ref: '#/components/schemas/Seed'
+        steps:
+          $ref: '#/components/schemas/Steps'
+        text_prompts:
+          $ref: '#/components/schemas/TextPrompts'
+        step_schedule_end:
+          type: number
+          description: Skips a proportion of the end of the diffusion steps, allowing the init_image to influence the final generated image.  Lower values will result in more influence from the init_image, while higher values will result in more influence from the diffusion steps.
+          example: 0.01
+          minimum: 0
+          maximum: 1
+        step_schedule_start:
+          type: number
+          description: Skips a proportion of the start of the diffusion steps, allowing the init_image to influence the final generated image.  Lower values will result in more influence from the init_image, while higher values will result in more influence from the diffusion steps.  (e.g. a value of `0` would simply return you the init_image, where a value of `1` would return you a completely different image.)
+          example: 0.4
+          minimum: 0
+          maximum: 1
+      example:
+        cfg_scale: 7
+        clip_guidance_preset: FAST_BLUE
+        height: 512
+        sampler: K_DPM_2_ANCESTRAL
+        samples: 1
+        seed: 0
+        step_schedule_end: 0.01
+        step_schedule_start: 0.4
+        steps: 75
+        text_prompts:
+          - text: A lighthouse on a cliff
+            weight: 1
+        width: 512
+      required:
+        - text_prompts
+    ImageToImageRequestBody:
+      type: object
+      properties:
+        init_image:
+          x-go-type: '[]byte'
+          type: string
+          description: Initial image to use for the image-to-image generation
+          example: <image binary>
+          format: binary
+        options:
+          $ref: '#/components/schemas/ImageToImageOptions'
+      example:
+        init_image: <image binary>
+        options:
+          cfg_scale: 7
+          clip_guidance_preset: FAST_BLUE
+          height: 512
+          sampler: K_DPM_2_ANCESTRAL
+          samples: 1
+          seed: 0
+          step_schedule_end: 0.01
+          step_schedule_start: 0.4
+          steps: 75
+          text_prompts:
+            - text: A lighthouse on a cliff
+              weight: 1
+          width: 512
+      required:
+        - options
+        - init_image
+    MaskingOptions:
+      type: object
+      properties:
+        cfg_scale:
+          $ref: '#/components/schemas/CfgScale'
+        clip_guidance_preset:
+          $ref: '#/components/schemas/ClipGuidancePreset'
+        height:
+          $ref: '#/components/schemas/Height'
+        width:
+          $ref: '#/components/schemas/Width'
+        sampler:
+          $ref: '#/components/schemas/Sampler'
+        samples:
+          $ref: '#/components/schemas/Samples'
+        seed:
+          $ref: '#/components/schemas/Seed'
+        steps:
+          $ref: '#/components/schemas/Steps'
+        text_prompts:
+          $ref: '#/components/schemas/TextPrompts'
+        step_schedule_end:
+          type: number
+          description: Skips a proportion of the end of the diffusion steps, allowing the init_image to influence the final generated image.  Lower values will result in more influence from the init_image, while higher values will result in more influence from the diffusion steps.
+          example: 0.01
+          minimum: 0
+          maximum: 1
+        step_schedule_start:
+          type: number
+          description: Skips a proportion of the start of the diffusion steps, allowing the init_image to influence the final generated image.  Lower values will result in more influence from the init_image, while higher values will result in more influence from the diffusion steps.  (e.g. a value of `0` would simply return you the init_image, where a value of `1` would return you a completely different image.)
+          example: 0.4
+          minimum: 0
+          maximum: 1
+        mask_source:
+          type: string
+          description: |-
+            For any given pixel, the mask determines the strength of generation on a linear scale.  This parameter determines where to source the mask from:
+            - `MASK_IMAGE_WHITE` will use the white pixels of the mask_image as the mask, where white pixels are completely replaced and black pixels are unchanged
+            - `MASK_IMAGE_BLACK` will use the black pixels of the mask_image as the mask, where black pixels are completely replaced and white pixels are unchanged
+            - `INIT_IMAGE_ALPHA` will use the alpha channel of the init_image as the mask, where fully transparent pixels are completely replaced and fully opaque pixels are unchanged (**Note:** we ignore mask_image when this parameter is present so it can be omitted)
+          example: MASK_IMAGE_WHITE
+          enum:
+            - INIT_IMAGE_ALPHA
+            - MASK_IMAGE_WHITE
+            - MASK_IMAGE_BLACK
+      example:
+        cfg_scale: 7
+        clip_guidance_preset: FAST_BLUE
+        height: 512
+        mask_source: INIT_IMAGE_ALPHA
+        sampler: K_DPM_2_ANCESTRAL
+        samples: 1
+        seed: 0
+        steps: 75
+        text_prompts:
+          - text: A lighthouse on a cliff
+            weight: 1
+        width: 512
+      required:
+        - text_prompts
+        - mask_source
+    MaskingRequestBody:
+      type: object
+      properties:
+        init_image:
+          x-go-type: '[]byte'
+          type: string
+          description: Initial image to use for the image-to-image generation
+          example: <image binary>
+          format: binary
+        mask_image:
+          x-go-type: '[]byte'
+          type: string
+          description: 'Optional grayscale mask that allows for influence over which pixels are eligible for diffusion and at what strength. Must be the same dimensions as the `init_image`. Use the `mask_source` option to specify whether the white or black pixels should be inpainted. (Note: if you set `mask_source` to `INIT_IMAGE_ALPHA` you can omit the `mask_image` parameter.)'
+          example: <image binary>
+          format: binary
+        options:
+          $ref: '#/components/schemas/MaskingOptions'
+      example:
+        init_image: <image binary>
+        mask_image: <image binary>
+        options:
+          cfg_scale: 7
+          clip_guidance_preset: FAST_BLUE
+          height: 512
+          mask_source: MASK_IMAGE_BLACK
+          sampler: K_DPM_2_ANCESTRAL
+          samples: 1
+          seed: 0
+          steps: 75
+          text_prompts:
+            - text: A lighthouse on a cliff
+              weight: 1
+          width: 512
+      required:
+        - options
+        - init_image
+    TextToImageRequestBody:
+      type: object
+      properties:
+        cfg_scale:
+          $ref: '#/components/schemas/CfgScale'
+        clip_guidance_preset:
+          $ref: '#/components/schemas/ClipGuidancePreset'
+        height:
+          $ref: '#/components/schemas/Height'
+        width:
+          $ref: '#/components/schemas/Width'
+        sampler:
+          $ref: '#/components/schemas/Sampler'
+        samples:
+          $ref: '#/components/schemas/Samples'
+        seed:
+          $ref: '#/components/schemas/Seed'
+        steps:
+          $ref: '#/components/schemas/Steps'
+        text_prompts:
+          $ref: '#/components/schemas/TextPrompts'
+      example:
+        cfg_scale: 7
+        clip_guidance_preset: FAST_BLUE
+        height: 512
+        sampler: K_DPM_2_ANCESTRAL
+        samples: 1
+        seed: 0
+        steps: 75
+        text_prompts:
+          - text: A lighthouse on a cliff
+            weight: 1
+        width: 512
+      required:
+        - text_prompts
+    Image:
+      type: object
+      properties:
+        base64:
+          type: string
+          description: Image encoded in base64
+          example: Sed corporis modi et.
+        finishReason:
+          type: string
+          example: CONTENT_FILTERED
+          enum:
+            - SUCCESS
+            - ERROR
+            - CONTENT_FILTERED
+        seed:
+          type: number
+          description: The seed associated with this image
+          example: 1229191277
+      example:
+        - base64: ...very long string...
+          finishReason: SUCCESS
+          seed: 1050625087
+        - base64: ...very long string...
+          finishReason: CONTENT_FILTERED
+          seed: 1229191277
+    OrganizationMembership:
+      type: object
+      properties:
+        id:
+          type: string
+          example: org-123456
+          x-go-name: ID
+        is_default:
+          type: boolean
+          example: false
+        name:
+          type: string
+          example: My Organization
+        role:
+          type: string
+          example: MEMBER
+      example:
+        id: org-123456
+        is_default: false
+        name: My Organization
+        role: MEMBER
+      required:
+        - id
+        - name
+        - role
+        - is_default
+    AccountResponseBody:
+      type: object
+      properties:
+        email:
+          type: string
+          description: The user's email
+          example: example@stability.ai
+          format: email
+        id:
+          type: string
+          description: The user's ID
+          example: user-1234
+          x-go-name: ID
+        organizations:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrganizationMembership'
+          description: The user's organizations
+          example:
+            - id: org-123456
+              is_default: false
+              name: My Organization
+              role: MEMBER
+            - id: org-123456
+              is_default: false
+              name: My Organization
+              role: MEMBER
+            - id: org-123456
+              is_default: false
+              name: My Organization
+              role: MEMBER
+        profile_picture:
+          type: string
+          description: The user's profile picture
+          example: https://api.stability.ai/example.png
+          format: uri
+      example:
+        email: example@stability.ai
+        id: user-1234
+        organizations:
+          - id: org-123456
+            is_default: false
+            name: My Organization
+            role: MEMBER
+          - id: org-123456
+            is_default: false
+            name: My Organization
+            role: MEMBER
+          - id: org-123456
+            is_default: false
+            name: My Organization
+            role: MEMBER
+          - id: org-123456
+            is_default: false
+            name: My Organization
+            role: MEMBER
+        profile_picture: https://api.stability.ai/example.png
+      required:
+        - id
+        - email
+        - organizations
+    BalanceResponseBody:
+      type: object
+      properties:
+        credits:
+          type: number
+          description: The balance of the account/organization associated with the API key
+          example: 0.41122252265928866
+          format: double
+      example:
+        credits: 0.07903292496944721
+      required:
+        - credits
+tags:
+  - name: v1alpha/user
+    description: Manage your Stability.ai account, and view account/organization balances - deprecated, use v1beta/user instead
+  - name: v1alpha/engines
+    description: Enumerate available engines - deprecated, use v1beta/engines instead
+  - name: v1alpha/generation
+    description: Generate images from text, existing images, or both - deprecated, use v1beta/generation instead

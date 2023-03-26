@@ -1,0 +1,13 @@
+{
+    "include": ["./code", "./out"],
+    "compilerOptions": {
+        "lib": ["esnext", "dom"],
+        "module": "esnext",
+        "target": "esnext",
+        "strict": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "moduleResolution": "node"
+    }
+}
