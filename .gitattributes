@@ -1,1 +1,2 @@
-generated/** linguist-generated=true
+generated/**    -diff -merge
+generated/**    linguist-generated=true
