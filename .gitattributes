@@ -1,2 +1,2 @@
-generated/**    -diff -merge
-generated/**    linguist-generated=true
+generated/spec/*.json   -diff -merge
+generated/spec/*.json   linguist-generated=true
