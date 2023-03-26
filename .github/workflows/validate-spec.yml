@@ -45,11 +45,15 @@ jobs:
       - name: Lint
         run: |
           yarn lint
-  bundle-spec:
-    name: Bundle
+  generated:
+    name: Ensure generated files are up to date
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      # Checkout the PR branch so we're able to commit back to it
+      - uses: actions/checkout@v3
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.ref }}
       - uses: actions/setup-node@v3
         with:
           node-version: 16
@@ -57,9 +61,13 @@ jobs:
       - name: Install NPM Dependencies
         run: |
           yarn install --frozen-lockfile
-      - name: Bundle
+      - name: Regenerate
         run: |
-          yarn bundle
-      - name: Assert clean git state
-        run: |
-          git diff --exit-code || (echo "Generated spec is out of date. Please run 'yarn bundle' and commit the changes." && exit 1)
+          yarn generate
+      - name: Commit changes (if any)
+        uses: EndBug/add-and-commit@v9
+        with:
+          add: 'generated/'
+          message: 'chore: update generated files'
+          committer_name: GitHub Actions
+          committer_email: actions@github.com
