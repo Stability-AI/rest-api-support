@@ -1,1 +1,1 @@
-generated/*.json linguist-generated=true
+generated/** linguist-generated=true
