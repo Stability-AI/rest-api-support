@@ -9,11 +9,6 @@ if [ "$1" = "local" ]; then
     export API_HOST=http://localhost:8080
 fi
 
-# Use the 'run-all.sh prod' to run these examples against production
-if [ "$1" = "prod" ]; then
-    export API_HOST=https://api.stability.ai
-fi
-
 # Clear output dir
 rm -rf out
 mkdir out
