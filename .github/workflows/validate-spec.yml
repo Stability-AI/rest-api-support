@@ -1,0 +1,47 @@
+name: Validate API Spec
+
+on:
+  push:
+  workflow_dispatch: 
+
+jobs:
+  # Cannot be enabled until we merge to this to main
+  #
+  # diff-spec:
+  #   name: Prevent Breaking Changes
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Check out head branch
+  #       uses: actions/checkout@v2
+  #       with:
+  #         path: head
+  #     - name: Check out main branch
+  #       uses: actions/checkout@v2
+  #       with:
+  #         ref: main
+  #         path: base
+  #     - name: Check v1beta
+  #       uses: mvegter/openapi-diff-action@v0.23.5
+  #       with:
+  #         head-spec: head/generated/spec/v1beta.json
+  #         base-spec: base/generated/spec/v1beta.json
+  #     - name: Check v1
+  #       uses: mvegter/openapi-diff-action@v0.23.5
+  #       with:
+  #         head-spec: head/generated/spec/v1.json
+  #         base-spec: base/generated/spec/v1.json
+  lint-spec:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: 'yarn'
+      - name: Install NPM Dependencies
+        run: |
+          yarn install --frozen-lockfile
+      - name: Lint
+        run: |
+          yarn lint:all
