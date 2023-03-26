@@ -1,0 +1,67 @@
+name: Validate API Spec
+
+on:
+  push:
+  workflow_dispatch: 
+
+jobs:
+  validate:
+    name: Main
+    runs-on: ubuntu-latest
+    steps:
+      # By default, when you use actions/checkout on a PR, it will checkout the 
+      # head commit in a detached head state. If you want to make some changes, 
+      # you have to checkout the branch the PR is coming from in the head repo.
+      #
+      # https://github.com/EndBug/add-and-commit#working-with-prs
+      - uses: actions/checkout@v3
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.ref }}
+        if: github.event_name == 'pull_request'
+      - uses: actions/checkout@v3
+        if: github.event_name != 'pull_request'
+
+      # Setup environment
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: 'yarn'
+      - name: yarn install
+        run: |
+          yarn install --frozen-lockfile
+
+      # Rebuild generated files and commit changes (if any)
+      - name: yarn generate
+        run: |
+          yarn generate
+      - name: Commit changes (if any)
+        uses: EndBug/add-and-commit@v9
+        with:
+          add: 'generated/'
+          message: 'chore: update generated files'
+          committer_name: GitHub Actions
+          committer_email: actions@github.com
+
+      # Lint everything
+      - name: yarn lint
+        run: |
+          yarn lint
+
+      # Checking for breaking changes (disabled until we merge to main)
+      #
+      # - name: Checkout base branch for breaking change detection
+      #   uses: actions/checkout@v2
+      #   with:
+      #     path: _base
+      #     ref: main
+      # - name: Check v1beta for breaking changes
+      #   uses: mvegter/openapi-diff-action@v0.23.5
+      #   with:
+      #     head-spec: generated/spec/v1beta.json
+      #     base-spec: _base/generated/spec/v1beta.json
+      # - name: Check v1 for breaking changes
+      #   uses: mvegter/openapi-diff-action@v0.23.5
+      #   with:
+      #     head-spec: generated/spec/v1.json
+      #     base-spec: _base/generated/spec/v1.json

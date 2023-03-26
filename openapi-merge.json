@@ -1,0 +1,17 @@
+{
+  "inputs": [
+    {
+      "inputFile": "./spec/info.yaml"
+    },
+    {
+      "inputFile": "./generated/spec/v1.json",
+      "dispute": {
+        "prefix": "V1"
+      },
+      "pathModification": {
+        "prepend": "/v1"
+      }
+    }
+  ],
+  "output": "./generated/spec/merged.json"
+}

@@ -1,0 +1,24 @@
+# See https://redoc.ly/docs/cli/configuration/ for more information.
+extends:
+  - recommended
+
+rules:
+  no-unused-components: warn
+  info-license: off
+  # Circle back around and see if we can remove this rule.
+  no-invalid-media-type-examples: off
+
+apis:
+  main@v1:
+    root: ./spec/v1.yaml
+  main@v1beta:
+    root: ./spec/v1beta.yaml
+  main@v1alpha:
+    root: ./spec/v1alpha.yaml
+
+theme:
+  openapi:
+    theme:
+      colors:
+        primary:
+          main: "#32329f"

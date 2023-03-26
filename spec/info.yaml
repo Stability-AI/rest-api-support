@@ -1,0 +1,25 @@
+info:
+  termsOfService: 'https://platform.stability.ai/docs/terms-of-service'
+  description: |
+    Welcome to the Stability.ai REST API!
+
+    Your DreamStudio API key will be required for authentication: [How to find your API key](https://platform.stability.ai/docs/getting-started/authentication)
+
+    API operations use the following versioning scheme:
+    - `/v*` interface is stable and ready for production workloads
+    - `/v*beta*`: interface is stable, preparing for production release
+    - `/v*alpha*`: under development and the interface is subject to change
+
+    NOTE: The v1alpha and v1beta endpoints from the developer preview are still available, but they
+    will disabled on May 1st, 2023.  Please migrate to the v1 endpoints as soon as possible.
+
+    If you have feedback or encounter any issues with the API, please reach out:
+      - [https://github.com/Stability-AI/REST-API](https://github.com/Stability-AI/REST-API)
+      - [https://discord.gg/stablediffusion #API channel](https://discord.com/channels/1002292111942635562/1042896447311454361)
+  title: Stability.ai REST API
+  version: 'v1'
+  x-logo:
+    altText: Stability.ai REST API
+    url: /docs/StabilityLogo.png
+servers:
+  - url: https://api.stability.ai

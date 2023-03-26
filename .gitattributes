@@ -1,0 +1,2 @@
+generated/spec/*.json -diff -merge
+generated/spec/*.json linguist-generated
