@@ -5,11 +5,34 @@ on:
   workflow_dispatch: 
 
 jobs:
+  generated:
+    name: Update generated files
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: 'yarn'
+      - name: Install NPM Dependencies
+        run: |
+          yarn install --frozen-lockfile
+      - name: Regenerate
+        run: |
+          yarn generate
+      - name: Commit changes (if any)
+        uses: EndBug/add-and-commit@v9
+        with:
+          add: 'generated/'
+          message: 'chore: update generated files'
+          committer_name: GitHub Actions
+          committer_email: actions@github.com
   # Cannot be enabled until we merge to this to main
   #
   # diff-spec:
   #   name: Prevent Breaking Changes
   #   runs-on: ubuntu-latest
+  #   needs: [generated]
   #   steps:
   #     - name: Check out head branch
   #       uses: actions/checkout@v2
@@ -33,8 +56,9 @@ jobs:
   lint-spec:
     name: Lint
     runs-on: ubuntu-latest
+    needs: [generated]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
           node-version: 16
@@ -45,29 +69,3 @@ jobs:
       - name: Lint
         run: |
           yarn lint
-  generated:
-    name: Update generated files
-    runs-on: ubuntu-latest
-    steps:
-      # Checkout the PR branch so we're able to commit back to it
-      - uses: actions/checkout@v3
-        with:
-          repository: ${{ github.event.pull_request.head.repo.full_name }}
-          ref: ${{ github.event.pull_request.head.ref }}
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 16
-          cache: 'yarn'
-      - name: Install NPM Dependencies
-        run: |
-          yarn install --frozen-lockfile
-      - name: Regenerate
-        run: |
-          yarn generate
-      - name: Commit changes (if any)
-        uses: EndBug/add-and-commit@v9
-        with:
-          add: 'generated/'
-          message: 'chore: update generated files'
-          committer_name: GitHub Actions
-          committer_email: actions@github.com
