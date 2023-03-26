@@ -60,6 +60,6 @@ jobs:
       - name: Bundle
         run: |
           yarn bundle
-      - name: Assert no changes
+      - name: Assert clean git state
         run: |
           git diff --exit-code || (echo "Generated spec is out of date. Please run 'yarn bundle' and commit the changes." && exit 1)
